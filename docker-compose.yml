@@ -1,0 +1,61 @@
+version: '3'
+services:
+  nginx:
+    hostname: nginx
+    image: "kingkoo/nginx:1.12.1"
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    networks:
+      - lnmt
+    volumes:
+      - ./wwwroot:/usr/local/nginx/php
+      - ./webapps:/opt/webapps
+      - ./nginx/html:/usr/local/nginx/html
+  php:
+    hostname: php
+    image: "kingkoo/php:5.6"
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    networks:
+      - lnmt
+    volumes:
+      - ./wwwroot:/usr/local/nginx/php
+  tomcat01:
+    hostname: tomcat01
+    image: "kingkoo/tomcat:8.0"
+    build: ./tomcat
+    networks:
+      - lnmt
+    volumes:
+      - /usr/local/jdk1.8.0_171:/usr/local/jdk1.8.0_171
+      - ./webapps:/usr/local/apache-tomcat-8.0.46/webapps
+
+  tomcat02:
+    hostname: tomcat02
+    image: "kingkoo/tomcat:8.0"
+    build: ./tomcat
+    networks:
+      - lnmt
+    volumes:
+      - /usr/local/jdk1.8.0_171:/usr/local/jdk1.8.0_171
+      - ./webapps:/usr/local/apache-tomcat-8.0.46/webapps
+
+  mysql:
+    hostname: mysql
+    image: mysql:5.6
+    ports:
+      - 3306:3306
+    networks:
+      - lnmt
+    volumes:
+      - ./mysql/conf:/etc/mysql/conf.d
+      - ./mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+networks:
+  lnmt:
