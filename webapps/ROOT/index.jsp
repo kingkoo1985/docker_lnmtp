@@ -3,7 +3,7 @@
 
 <%@ page import="java.util.Enumeration"%>
 <%@ page import="java.util.Locale"%>
-
+<%@ page import="java.net.InetAddress"%>
 <html>
 <head>
 <title>JSP获取系统信息</title>
@@ -86,7 +86,29 @@ table td {
 													<th width="75%" nowrap>属性值</th>
 												</tr>
 												<%
-int iCount = 1;
+												String host_info = "unknown";
+												String IP_info ="unknown";
+												try{
+													InetAddress ia = InetAddress.getLocalHost();
+													host_info = ia.getHostName();//获取计算机主机名 
+													IP_info = ia.getHostAddress();//获取计算机IP 
+												}catch (java.net.UnknownHostException ex){
+
+												}
+												
+												%>
+												<tr bgcolor="#FFFFFF">
+													<td align="center">1&nbsp;</td>
+													<td>host name</td>
+													<td style="word-break: break-all;"><%= host_info %></td>
+												</tr>
+												<tr bgcolor="#FFFFFF">
+													<td align="center">2&nbsp;</td>
+													<td>IP Address</td>
+													<td style="word-break: break-all;"><%= IP_info %></td>
+												</tr>
+												<%
+int iCount = 3;
 Enumeration enu = System.getProperties().keys();
 while(enu.hasMoreElements())
 {
